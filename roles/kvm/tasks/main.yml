@@ -1,0 +1,75 @@
+---
+- name: Get pool info
+  virt_pool:
+    command: info
+  register: pools
+
+- name: Get {{ storage_pool }} info
+  set_fact:
+    storage_path: "{{ pools|json_query('pools.KVM.path') }}"
+- debug:
+    var: storage_path
+
+- name: Create the cloud-init config drive path
+  file:
+    dest: '{{ storage_path }}/{{ item }}_configdrive'
+    state: directory
+  with_items:
+    - '{{ instances }}'
+
+- name: Create the cloud-init config drive files
+  template:
+    src: '{{ item[1] }}'
+    dest: '{{ storage_path }}/{{ item[0] }}_configdrive/{{ item[1] }}'
+  with_nested:
+    - '{{ instances }}'
+    - [ user-data, meta-data ]
+
+- name: Create the cloud-init config drive
+  command: 'genisoimage -output {{ storage_path }}/{{ item }}_cloud-init.iso -volid cidata -joliet -rock user-data meta-data'
+  args:
+    chdir: '{{ storage_path }}/{{ item }}_configdrive'
+    creates: '{{ storage_path }}/{{ item }}_cloud-init.iso'
+  with_items:
+    - '{{ instances }}'
+
+- name: Refresh the libvirt storage pool for openshift
+  command: 'virsh pool-refresh {{ storage_pool }}'
+
+- name: Docker drives
+  include_tasks: create-docker-drive.yml
+  with_items:
+    - '{{ instances }}'
+
+- name: VM drives
+  include_tasks: create-drive.yml
+  with_items:
+    - '{{ instances }}'
+
+- name: create libvirt instance
+  virt:
+    name: "{{ item }}"
+    command: define
+    xml: "{{ lookup('template', '../templates/node-template.xml.j2') }}"
+  with_items:
+    - '{{ instances }}'
+
+- name: Start VMs
+  virt:
+    name: '{{ item }}'
+    state: running
+  with_items:
+    - '{{ instances }}'
+
+- name: Wait for the VMs to get an IP
+  shell: 'virsh net-dhcp-leases {{ libvirt_network }} | egrep -c ''{{ instances | join("|") }}'''
+  register: nb_allocated_ips
+  until: nb_allocated_ips.stdout == '{{ instances | length }}'
+  retries: 60
+  delay: 3
+  when: instances | length != 0
+
+- name: Collect IP addresses of the VMs
+  shell: 'virsh net-dhcp-leases {{ libvirt_network }} | awk ''$6 == "{{ item }}" {gsub(/\/.*/, "", $5); print $5}'''
+  register: scratch_ip
+  with_items: '{{ instances }}'

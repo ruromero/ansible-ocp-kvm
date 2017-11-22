@@ -1,0 +1,9 @@
+---
+- name: Create OCP Cluster
+  hosts: localhost
+  roles:
+    - kvm
+  vars:
+    instances:
+      - master36
+#      - node36

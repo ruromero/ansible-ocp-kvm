@@ -1,0 +1,8 @@
+---
+- name: Check VM docker drive
+  stat:
+    path: "{{ storage_path }}/{{ item }}-docker.qcow2"
+  register: check_docker_storage
+- name: Create VM Docker drive
+  command: 'virsh vol-create-as {{ storage_pool }} {{ item }}-docker.qcow2 {{ storage_docker_size }} --format qcow2 --allocation 0'
+  when: not check_docker_storage.stat.exists

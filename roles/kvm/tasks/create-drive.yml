@@ -1,0 +1,8 @@
+---
+- name: Check VM drive
+  stat:
+    path: "{{ storage_path }}/{{ item }}.qcow2"
+  register: check_storage
+- name: Create VM drive
+  command: 'virsh vol-create-as {{ storage_pool }} {{ item }}.qcow2 {{ storage_size }} --format qcow2 --backing-vol {{ backing_image_name }} --backing-vol-format qcow2'
+  when: not check_storage.stat.exists
