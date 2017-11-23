@@ -6,4 +6,4 @@
   vars:
     instances:
       - master36
-#      - node36
+      - node36

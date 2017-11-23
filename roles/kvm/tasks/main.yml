@@ -54,22 +54,17 @@
   with_items:
     - '{{ instances }}'
 
-- name: Start VMs
+- name: Start VMs to run cloud-init
   virt:
     name: '{{ item }}'
     state: running
   with_items:
     - '{{ instances }}'
 
-- name: Wait for the VMs to get an IP
-  shell: 'virsh net-dhcp-leases {{ libvirt_network }} | egrep -c ''{{ instances | join("|") }}'''
-  register: nb_allocated_ips
-  until: nb_allocated_ips.stdout == '{{ instances | length }}'
-  retries: 60
-  delay: 3
-  when: instances | length != 0
+- set_fact:
+    ips: []
 
-- name: Collect IP addresses of the VMs
-  shell: 'virsh net-dhcp-leases {{ libvirt_network }} | awk ''$6 == "{{ item }}" {gsub(/\/.*/, "", $5); print $5}'''
-  register: scratch_ip
-  with_items: '{{ instances }}'
+- name: Get IPs
+  include_tasks: get_ip.yml
+  with_items:
+    - '{{ instances }}'

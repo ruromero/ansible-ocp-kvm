@@ -2,7 +2,7 @@
 cpus: 2
 memory: 4
 storage_pool: KVM
-backing_image_name: rhel-guest-image-7.3-35.x86_64.qcow2
+backing_image_name: rhel-server-7.4-x86_64-kvm.qcow2
 storage_size: 10G
 storage_docker_size: 10G
 network_device: virbr0

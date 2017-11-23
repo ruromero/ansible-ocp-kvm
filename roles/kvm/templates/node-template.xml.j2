@@ -38,10 +38,6 @@
       <readonly/>
     </disk>
     <controller type='scsi' model='virtio-scsi' />
-    <interface type='bridge'>
-      <source bridge='virbr0'/>
-      <model type='rtl8139'/>
-    </interface>
     <interface type='network'>
       <source network='{{ libvirt_network }}'/>
       <model type='virtio'/>
@@ -52,9 +48,11 @@
     <console type='pty'>
       <target type='serial' port='0'/>
     </console>
+      <!--
     <graphics type='vnc' port='-1' autoport='yes'>
       <listen type='address'/>
     </graphics>
+        -->
     <memballoon model='virtio'>
     </memballoon>
   </devices>

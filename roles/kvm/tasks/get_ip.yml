@@ -1,0 +1,27 @@
+---
+- name: Get XML from {{ item }}
+  virt:
+    name: '{{ item }}'
+    command: get_xml
+  register: domain_xml
+
+- name: Extract mac address
+  xml:
+    xmlstring: '{{ domain_xml.get_xml }}'
+    xpath: /domain/devices/interface[@type='network']/mac
+    content: attribute
+  register: result
+
+- name: Wait for the VMs to get an IP
+  shell: 'virsh net-dhcp-leases {{ libvirt_network }} | grep {{ result.matches[0].mac.address }} | awk ''{gsub(/\/.*/, "", $5); print $5}'''
+  become: yes
+  register: ip
+  until: ip.stdout != ""
+  retries: 60
+  delay: 3
+
+- set_fact:
+    ips: "{{ ips }} + [ '{{ ip.stdout }}' ]"
+
+- debug:
+    var: ips
