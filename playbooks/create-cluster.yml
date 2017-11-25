@@ -1,9 +1,6 @@
 ---
 - name: Create OCP Cluster
-  hosts: localhost
+  hosts: bastion
   roles:
-    - kvm
-  vars:
-    instances:
-      - master36
-      - node36
+    - create_vm_kvm
+#    - pre-provision-ocp

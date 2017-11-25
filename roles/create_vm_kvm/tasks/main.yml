@@ -7,8 +7,6 @@
 - name: Get {{ storage_pool }} info
   set_fact:
     storage_path: "{{ pools|json_query('pools.KVM.path') }}"
-- debug:
-    var: storage_path
 
 - name: Create the cloud-init config drive path
   file:
@@ -35,14 +33,15 @@
 
 - name: Refresh the libvirt storage pool for openshift
   command: 'virsh pool-refresh {{ storage_pool }}'
+  changed_when: false
 
 - name: Docker drives
-  include_tasks: create-docker-drive.yml
+  include_tasks: create_docker_drive.yml
   with_items:
     - '{{ instances }}'
 
 - name: VM drives
-  include_tasks: create-drive.yml
+  include_tasks: create_drive.yml
   with_items:
     - '{{ instances }}'
 
@@ -61,10 +60,21 @@
   with_items:
     - '{{ instances }}'
 
-- set_fact:
+- name: Initialize IP list
+  set_fact:
     ips: []
 
 - name: Get IPs
   include_tasks: get_ip.yml
   with_items:
     - '{{ instances }}'
+
+- name: Update hosts
+  become: true
+  lineinfile:
+    path: /etc/hosts
+    regexp: '{{ item[0] }}'
+    line: '{{ item[1] }} {{ item[0] }} {{ item[0]}}.{{ domain }}'
+  with_together:
+    - '{{ instances }}'
+    - '{{ ips }}'

@@ -1,0 +1,27 @@
+---
+- name: Get pool info
+  virt_pool:
+    command: info
+  register: pools
+
+- name: Destroy VMs
+  include_tasks: destroy_vm.yml
+  with_items:
+    - '{{ instances }}'
+
+- name: Remove SSH keys
+  lineinfile:
+    path: ~/.ssh/known_hosts
+    regexp: '{{ item }},'
+    state: absent
+  with_items:
+    - '{{ instances }}'
+
+- name: Remove from /etc/hosts
+  become: true
+  lineinfile:
+    path: /etc/hosts
+    regexp: '{{ item }}'
+    state: absent
+  with_items:
+    - '{{ instances }}'

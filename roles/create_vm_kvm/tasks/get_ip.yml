@@ -19,9 +19,7 @@
   until: ip.stdout != ""
   retries: 60
   delay: 3
+  changed_when: false
 
 - set_fact:
     ips: "{{ ips }} + [ '{{ ip.stdout }}' ]"
-
-- debug:
-    var: ips

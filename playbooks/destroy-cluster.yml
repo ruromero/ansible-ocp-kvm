@@ -1,0 +1,5 @@
+---
+- name: Destroy OCP Cluster
+  hosts: bastion
+  roles:
+    - destroy_vm_kvm

@@ -1,0 +1,34 @@
+---
+- name: Check VM existence
+  become: true
+  shell: 'virsh list --all --name | grep -c {{ item }}'
+  register: exist_instance
+  failed_when: false
+  changed_when: exist_instance.stdout == "1"
+
+- debug:
+    var: exist_instance.stdout
+
+- name: Force Stop VM
+  virt:
+    name: '{{ item }}'
+    state: destroyed
+  when: exist_instance.stdout == "1"
+  
+- name: Undefine VM
+  become: true
+  command: 'virsh undefine {{ item }} --managed-save --remove-all-storage --delete-snapshots'
+  when: exist_instance.stdout == "1"
+
+- name: Get {{ storage_pool }} info
+  set_fact:
+    storage_path: "{{ pools|json_query('pools.KVM.path') }}"
+
+- name: Delete the volumes and cloud-init config drive path
+  file:
+    dest: '{{ storage_path }}/{{ item }}{{ drive }}'
+    state: absent
+  with_items:
+    - ['.qcow2', '-docker.qcow2', '_cloud-init.iso', '_configdrive']
+  loop_control:
+    loop_var: drive
