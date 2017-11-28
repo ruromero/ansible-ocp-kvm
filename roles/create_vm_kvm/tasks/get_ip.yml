@@ -23,3 +23,20 @@
 
 - set_fact:
     ips: "{{ ips }} + [ '{{ ip.stdout }}' ]"
+
+- name: Add new masters
+  add_host:
+    hostname: '{{ item }}'
+    ansible_ssh_host: '{{ ip.stdout }}'
+    groups: 'nodes, masters'
+    libvirt_ip_address: '{{ ip.stdout }}'
+  when: item in masters
+
+- name: Add new nodes
+  add_host:
+    hostname: '{{ item }}'
+    ansible_ssh_host: '{{ ip.stdout }}'
+    groups: 'nodes, {{ cluster_name }}'
+    ansible_ssh_user: '{{ ansible_user }}'
+    libvirt_ip_address: '{{ ip.stdout }}'
+  when: item not in masters

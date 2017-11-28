@@ -53,6 +53,11 @@
   with_items:
     - '{{ instances }}'
 
+- name: Ensure network {{ libvirt_network }} is active
+  virt_net:
+    name: '{{ libvirt_network }}'
+    state: active
+
 - name: Start VMs to run cloud-init
   virt:
     name: '{{ item }}'
@@ -78,3 +83,8 @@
   with_together:
     - '{{ instances }}'
     - '{{ ips }}'
+
+- name: Create inventory for {{ cluster_name }}
+  template:
+    src: inventory
+    dest: '{{ inventory_dir }}/{{ cluster_name }}'

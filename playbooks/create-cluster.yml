@@ -3,4 +3,3 @@
   hosts: bastion
   roles:
     - create_vm_kvm
-#    - pre-provision-ocp
