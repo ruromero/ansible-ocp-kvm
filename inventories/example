@@ -1,0 +1,23 @@
+[bastion:vars]
+domain=example.com
+cluster_name=apps
+app_subdomain={{ cluster_name }}.example.com
+masters=['master']
+instances=['master','node']
+inventory_host=master
+cpus=2
+memory=4
+storage_pool=KVM
+backing_image_name=rhel-server-7.4-x86_64-kvm.qcow2
+storage_size=10G
+storage_docker_size=10G
+network_device=virbr0
+libvirt_network=openshift-ansible
+openshift_version=3.6
+ansible_user=openshift
+rh_subscription_user=#########
+rh_subscription_pass=#########
+rh_subscription_pool=#########
+
+[bastion]
+localhost ansible_connection=local
