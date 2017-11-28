@@ -59,3 +59,4 @@ openshift_master_default_subdomain={{ app_subdomain }}
 # networking and liveness or readiness probes.
 # Setting this variable to true will override that check.
 openshift_override_hostname_check=true
+openshift_disable_check=disk_availability,docker_storage,memory_availability
