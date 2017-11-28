@@ -22,18 +22,6 @@ etcd
 {{ inventory_host }}.{{ domain }}
 
 [OSEv3:vars]
-##### Provisioner variables
-cluster_name={{ cluster_name }}
-ocp_version={{ openshift_version }}
-{% if openshift_version == 3.6 %}
-docker_version=1.12.6
-{% endif %}
-
-# Register nodes
-rh_subscription_user={{ rh_subscription_user }}
-rh_subscription_pass={{ rh_subscription_pass }}
-rh_subscription_pool={{ rh_subscription_pool }}
-
 # SSH user, this user should allow ssh based auth without requiring a
 # password. If using ssh key based auth, then the key should be managed by an
 # ssh agent.
