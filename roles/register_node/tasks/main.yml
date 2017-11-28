@@ -1,7 +1,0 @@
----
-- name: Register subscription
-  redhat_subscription:
-    state: present
-    username: '{{ rh_subscription_user }}'
-    password: '{{ rh_subscription_pass }}'
-    pool_ids: '{{ rh_subscription_pool }}'

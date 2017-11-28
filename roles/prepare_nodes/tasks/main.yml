@@ -1,0 +1,47 @@
+---
+- name: Register subscription
+  redhat_subscription:
+    state: present
+    username: '{{ rh_subscription_user }}'
+    password: '{{ rh_subscription_pass }}'
+    pool_ids: '{{ rh_subscription_pool }}'
+
+- name: Disable all repos
+  command: 'subscription-manager repos --disable="*"'
+
+- name: Enable repos
+  command: 'subscription-manager repos \
+    --enable="rhel-7-server-rpms" \
+    --enable="rhel-7-server-extras-rpms" \
+    --enable="rhel-7-server-ose-{{ ocp_version }}-rpms" \
+    --enable="rhel-7-fast-datapath-rpms"'
+
+- name: Install dependendies
+  yum:
+    name:
+      - wget
+      - git
+      - net-tools
+      - bind-utils
+      - iptables-services
+      - bridge-utils
+      - bash-completion
+      - kexec-tools
+      - sos
+      - psacct
+      - atomic-openshift-utils
+    state: latest
+
+- name: Install Docker
+  yum:
+    name: docker-{{ docker_version }}
+    state: present
+
+- name: Docker storage setup
+  command: docker-storage-setup
+
+- name: Enable docker
+  service:
+    - name: docker
+      status: started
+      enabled: true

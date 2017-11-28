@@ -1,15 +1,5 @@
 ---
-- name: Register all instances
+- name: Prepare hosts
   hosts: nodes
   roles:
-    - register_node
-
-# - name: Prepare VM that will run the OCP installer
-#   hosts: '{{ inventory_host }}'
-#   roles:
-#     - prepare_ansible_worker
-# 
-# - name: Prepare masters
-#   hosts: '{{ masters }}'
-#   roles:
-#     - prepare_masters
+    - prepare_nodes

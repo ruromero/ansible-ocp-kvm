@@ -45,6 +45,12 @@ openshift_master_default_subdomain={{ app_subdomain }}
 # Setting this variable to true will override that check.
 openshift_override_hostname_check=true
 
+##### Provisioner variables
+ocp_version={{ openshift_version }}
+{% if openshift_version == 3.6 %}
+docker_version=1.12.6
+{% endif %}
+
 # Register nodes
 rh_subscription_user={{ rh_subscription_user }}
 rh_subscription_pass={{ rh_subscription_pass }}
