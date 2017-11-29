@@ -1,12 +1,12 @@
 ---
-- name: Get pool info
+- name: Get storage pool info
   virt_pool:
     command: info
   register: pools
 
-- name: Get {{ storage_pool }} info
+- name: Get {{ storage_pool }} storage details
   set_fact:
-    storage_path: "{{ pools|json_query('pools.KVM.path') }}"
+    storage_path: "{{ pools|json_query(storage_pool_jsonpath) }}"
 
 - name: Create the cloud-init config drive path
   file:
