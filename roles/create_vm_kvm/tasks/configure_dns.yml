@@ -1,0 +1,15 @@
+---
+- name: Create dnsmasq conf file
+  template:
+    src: dnsmasq.j2
+    dest: /etc/NetworkManager/dnsmasq.d/{{ cluster_name }}.{{ domain }}
+  register: result
+
+- name: Get dnsmasq child process
+  shell: "systemctl status NetworkManager | grep /usr/sbin/dnsmasq | awk '{print$2}'"
+  register: nm_dnsmasq_cmd
+  when: result.changed
+
+- name: Restart dnsmasq child process
+  shell: 'kill {{ nm_dnsmasq_cmd.stdout }}'
+  when: result.changed

@@ -9,7 +9,7 @@
   with_items:
     - '{{ instances }}'
 
-- name: Remove SSH keys
+- name: Remove known_hosts entries
   lineinfile:
     path: ~/.ssh/known_hosts
     regexp: '{{ item }},'
@@ -25,3 +25,7 @@
     state: absent
   with_items:
     - '{{ instances }}'
+
+- name: Revert DNS changes
+  include_tasks: configure_dns.yml
+  become: true

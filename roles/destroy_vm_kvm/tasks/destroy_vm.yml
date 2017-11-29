@@ -6,15 +6,12 @@
   failed_when: false
   changed_when: exist_instance.stdout == "1"
 
-- debug:
-    var: exist_instance.stdout
-
 - name: Force Stop VM
   virt:
     name: '{{ item }}'
     state: destroyed
   when: exist_instance.stdout == "1"
-  
+
 - name: Undefine VM
   become: true
   command: 'virsh undefine {{ item }} --managed-save --remove-all-storage --delete-snapshots'

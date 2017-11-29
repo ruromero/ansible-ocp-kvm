@@ -74,7 +74,7 @@
   with_items:
     - '{{ instances }}'
 
-- name: Update hosts
+- name: Update hosts file
   become: true
   lineinfile:
     path: /etc/hosts
@@ -88,3 +88,7 @@
   template:
     src: inventory
     dest: '{{ inventory_dir }}/{{ cluster_name }}'
+
+- name: Configure DNS for {{ cluster_name }}.{{ domain }}
+  become: true
+  include_tasks: configure_dns.yml

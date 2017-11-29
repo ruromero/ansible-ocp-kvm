@@ -1,9 +1,9 @@
 ---
-# - name: Prepare hosts
-#   hosts: nodes
-#   become: true
-#   roles:
-#     - prepare_nodes
+- name: Prepare hosts
+  hosts: nodes
+  become: true
+  roles:
+    - prepare_nodes
 
 - name: Prepare to install
   hosts: inventory_host
