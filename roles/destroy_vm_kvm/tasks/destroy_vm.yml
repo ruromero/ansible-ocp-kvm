@@ -19,7 +19,7 @@
 
 - name: Get {{ storage_pool }} info
   set_fact:
-    storage_path: "{{ pools|json_query('pools.KVM.path') }}"
+    storage_path: "{{ pools|json_query(storage_pool_jsonpath) }}"
 
 - name: Delete the volumes and cloud-init config drive path
   file:
