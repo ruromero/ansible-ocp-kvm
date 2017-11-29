@@ -1,0 +1,17 @@
+---
+  - copy:
+      src: '{{ inventory_dir }}/{{ cluster_name }}'
+      dest: ~/hosts
+  - name: Copy same keys used by the host
+    copy:
+      src: ~/.ssh/{{ item }}
+      dest: ~/.ssh
+      mode: 0600
+    with_items:
+      - id_rsa
+      - id_rsa.pub
+  - name: Create symbolic link to playbooks
+    file:
+      src: /usr/share/ansible/openshift-ansible
+      dest: ~/openshift-ansible
+      state: link

@@ -7,15 +7,10 @@
 - name: Prepare to install
   hosts: inventory_host
   become_user: '{{ ansible_ssh_user }}'
-  tasks:
-    - copy:
-        src: '{{ inventory_dir }}/{{ cluster_name }}'
-        dest: ~/hosts
-    - name: Copy same keys used by the host
-      copy:
-        src: ~/.ssh/{{ item }}
-        dest: ~/.ssh
-        mode: 0600
-      with_items:
-        - id_rsa
-        - id_rsa.pub
+  roles:
+    - setup_inventory_host
+
+- name: Set up authentication
+  hosts: masters
+  roles:
+    - setup_htpasswd

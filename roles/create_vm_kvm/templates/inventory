@@ -15,7 +15,11 @@ etcd
 
 [nodes]
 {% for instance in instances %}
-{{ instance }}.{{ domain }}
+  {% if instance in masters %}
+{{ instance }}.{{ domain }} openshift_schedulable=True openshift_node_labels="{'region': 'infra'}"
+  {% else %}
+{{ instance }}.{{ domain }} openshift_node_labels="{'region': 'primary'}"
+  {% endif %}
 {% endfor %}
 
 [inventory_host]

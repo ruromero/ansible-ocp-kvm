@@ -1,0 +1,11 @@
+---
+- name: Create target directory
+  file:
+    path: /etc/origin/master
+    state: directory
+    mode: 755
+- name: Provision default user
+  htpasswd:
+    path: /etc/origin/master/htpasswd
+    name: openshift
+    password: RedHat1!
