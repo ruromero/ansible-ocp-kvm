@@ -1,7 +1,7 @@
 [bastion:vars]
 domain=example.com
 cluster_name=apps
-app_subdomain={{ cluster_name }}.example.com
+app_subdomain={{ cluster_name }}.{{ domain }}
 masters=['master']
 instances=['master','node']
 inventory_host=master

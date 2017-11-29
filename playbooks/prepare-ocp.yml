@@ -1,16 +1,17 @@
 ---
-- name: Prepare hosts
-  hosts: nodes
-  roles:
-    - prepare_nodes
+# - name: Prepare hosts
+#   hosts: nodes
+#   become: true
+#   roles:
+#     - prepare_nodes
 
 - name: Prepare to install
   hosts: inventory_host
-  become_user: '{{ ansible_ssh_user }}'
   roles:
     - setup_inventory_host
 
 - name: Set up authentication
   hosts: masters
+  become: true
   roles:
     - setup_htpasswd

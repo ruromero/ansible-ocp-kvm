@@ -1,6 +1,6 @@
 ---
-  - copy:
-      src: '{{ inventory_dir }}/{{ cluster_name }}'
+  - template:
+      src: hosts.j2
       dest: ~/hosts
   - name: Copy same keys used by the host
     copy:

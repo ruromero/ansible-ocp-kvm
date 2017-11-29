@@ -1,32 +1,17 @@
-[OSEv3:children]
-masters
-nodes
-etcd
-
 [masters]
-{% for master in masters %}
-{{ master }}.{{ domain }}
-{% endfor %}
-
-[etcd]
 {% for master in masters %}
 {{ master }}.{{ domain }}
 {% endfor %}
 
 [nodes]
 {% for instance in instances %}
-  {% if instance in masters %}
-{{ instance }}.{{ domain }} openshift_schedulable=True openshift_node_labels="{'region': 'infra'}"
-  {% else %}
-{{ instance }}.{{ domain }} openshift_node_labels="{'region': 'primary'}"
-  {% endif %}
+{{ instance }}.{{ domain }}
 {% endfor %}
 
 [inventory_host]
 {{ inventory_host }}.{{ domain }}
 
-[OSEv3:vars]
-##### Provisioner variables
+[nodes:vars]
 cluster_name={{ cluster_name }}
 ocp_version={{ openshift_version }}
 {% if openshift_version == 3.6 %}
@@ -42,25 +27,4 @@ rh_subscription_pool={{ rh_subscription_pool }}
 # password. If using ssh key based auth, then the key should be managed by an
 # ssh agent.
 ansible_ssh_user={{ ansible_user }}
-
-# If ansible_ssh_user is not root, ansible_become must be set to true and the
-# user must be configured for passwordless sudo
-ansible_become=yes
-
-# Specify the deployment type. Valid values are origin and openshift-enterprise.
-openshift_deployment_type=openshift-enterprise
-deployment_type=openshift-enterprise
-
-# htpasswd auth
-openshift_master_identity_providers=[{u'login': True, u'filename': u'/etc/origin/master/htpasswd', u'challenge': True, u'kind': u'HTPasswdPasswordIdentityProvider', u'name': u'htpasswd_auth'}]
-
-# default subdomain to use for exposed routes
-openshift_master_default_subdomain={{ app_subdomain }}
-
-# openshift-ansible will wait indefinitely for your input when it detects that the
-# value of openshift_hostname resolves to an IP address not bound to any local
-# interfaces. This mis-configuration is problematic for any pod leveraging host
-# networking and liveness or readiness probes.
-# Setting this variable to true will override that check.
-openshift_override_hostname_check=true
-openshift_disable_check=disk_availability,docker_storage,memory_availability
+subdomain={{ cluster_name }}.{{ domain }}
