@@ -2,6 +2,7 @@
 domain=example.com
 cluster_name=apps
 app_subdomain={{ cluster_name }}.{{ domain }}
+manage_dns=true
 masters=['master']
 instances=['master','node']
 inventory_host=master

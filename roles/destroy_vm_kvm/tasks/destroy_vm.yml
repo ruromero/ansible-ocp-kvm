@@ -1,6 +1,5 @@
 ---
 - name: Check VM existence
-  become: true
   shell: 'virsh list --all --name | grep -c {{ item }}'
   register: exist_instance
   failed_when: false
@@ -13,7 +12,6 @@
   when: exist_instance.stdout == "1"
 
 - name: Undefine VM
-  become: true
   command: 'virsh undefine {{ item }} --managed-save --remove-all-storage --delete-snapshots'
   when: exist_instance.stdout == "1"
 

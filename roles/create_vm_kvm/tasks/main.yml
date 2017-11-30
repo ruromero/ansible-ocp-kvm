@@ -83,6 +83,7 @@
   with_together:
     - '{{ instances }}'
     - '{{ ips }}'
+  when: manage_dns | bool
 
 - name: Create inventory for {{ cluster_name }}
   template:
@@ -92,3 +93,4 @@
 - name: Configure DNS for {{ cluster_name }}.{{ domain }}
   become: true
   include_tasks: configure_dns.yml
+  when: manage_dns | bool

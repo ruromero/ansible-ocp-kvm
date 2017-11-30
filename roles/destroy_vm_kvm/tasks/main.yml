@@ -25,7 +25,9 @@
     state: absent
   with_items:
     - '{{ instances }}'
+  when: manage_dns | bool
 
 - name: Revert DNS changes
   include_tasks: configure_dns.yml
   become: true
+  when: manage_dns | bool
