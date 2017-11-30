@@ -1,8 +1,17 @@
 [bastion:vars]
 domain=example.com
 cluster_name=apps
-app_subdomain={{ cluster_name }}.{{ domain }}
+
+### Use either xip.io, local or custom.
+## xip.io will use the IP of the master
+## local will join the cluster_name to the domain. e.g. apps.example.com
+## custom will require app_subdomain to be defined
+app_subdomain_type=xip.io
+#app_sudomain=apps.mydomain.com
+
+## Tamper with /etc/hosts and NetworkManager's dnsmasq configuration
 manage_dns=true
+
 masters=['master']
 instances=['master','node']
 inventory_host=master
@@ -14,7 +23,9 @@ storage_size=10G
 storage_docker_size=10G
 network_device=virbr0
 libvirt_network=openshift-ansible
-openshift_version=3.6
+openshift_version=3.7
+## If needed to override the default version
+#docker_version=1.12.6
 ansible_user=openshift
 rh_subscription_user=#########
 rh_subscription_pass=#########

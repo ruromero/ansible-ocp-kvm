@@ -12,7 +12,7 @@
   when: exist_instance.stdout == "1"
 
 - name: Undefine VM
-  command: 'virsh undefine {{ item }} --managed-save --remove-all-storage --delete-snapshots'
+  command: 'virsh undefine {{ item }} --managed-save'
   when: exist_instance.stdout == "1"
 
 - name: Get {{ storage_pool }} info

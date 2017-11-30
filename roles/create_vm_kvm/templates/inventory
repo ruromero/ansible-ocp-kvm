@@ -14,8 +14,8 @@
 [nodes:vars]
 cluster_name={{ cluster_name }}
 ocp_version={{ openshift_version }}
-{% if openshift_version == 3.6 %}
-docker_version=1.12.6
+{% if docker_version is defined %}
+docker_version={{ docker_version }}
 {% endif %}
 
 # Register nodes
@@ -27,4 +27,10 @@ rh_subscription_pool={{ rh_subscription_pool }}
 # password. If using ssh key based auth, then the key should be managed by an
 # ssh agent.
 ansible_ssh_user={{ ansible_user }}
+{% if app_subdomain_type == "local" %}
+app_subdomain={{ cluster_name }}.{{ domain }}
+{% elif app_subdomain_type == "xip.io" %}
+app_subdomain={{ cluster_name }}.{{ hostvars[inventory_host]['ansible_ssh_host'] }}.xip.io
+{% else %}
 app_subdomain={{ app_subdomain }}
+{% endif %}

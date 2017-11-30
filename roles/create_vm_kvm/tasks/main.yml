@@ -1,4 +1,12 @@
 ---
+- fail:
+    msg: "For custom app_subdomain_type you must define the app_subdomain to use"
+  when: app_subdomain_type == "custom" and app_subdomain is not defined
+- debug:
+    msg: "When using app_subdomain_type 'xip.io' or 'local' app_subdomain will be ignored"
+    verbosity: 0
+  when: app_subdomain_type in ["xip.io","local"] and app_subdomain is defined
+
 - name: Get storage pool info
   virt_pool:
     command: info
