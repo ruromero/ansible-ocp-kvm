@@ -7,4 +7,4 @@ storage_size: 10G
 storage_docker_size: 10G
 network_device: virbr0
 libvirt_network: openshift-ansible
-manage_dns: true
+manage_dns: false

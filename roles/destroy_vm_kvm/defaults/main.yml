@@ -1,3 +1,3 @@
 ---
 storage_pool: KVM
-manage_dns: true
+manage_dns: false

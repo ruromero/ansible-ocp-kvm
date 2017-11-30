@@ -10,7 +10,7 @@ app_subdomain_type=xip.io
 #app_sudomain=apps.mydomain.com
 
 ## Tamper with /etc/hosts and NetworkManager's dnsmasq configuration
-manage_dns=true
+# manage_dns=true
 
 masters=['master']
 instances=['master','node']
