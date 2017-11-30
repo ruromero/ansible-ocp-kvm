@@ -36,8 +36,8 @@ ansible_become=yes
 openshift_deployment_type=openshift-enterprise
 deployment_type=openshift-enterprise
 
-# htpasswd auth
-openshift_master_identity_providers=[{u'login': True, u'filename': u'/etc/origin/master/htpasswd', u'challenge': True, u'kind': u'HTPasswdPasswordIdentityProvider', u'name': u'htpasswd_auth'}]
+# htpasswd auth + allow all
+openshift_master_identity_providers=[{u'login': True, u'filename': u'/etc/origin/master/htpasswd', u'challenge': True, u'kind': u'HTPasswdPasswordIdentityProvider', u'name': u'htpasswd_auth'}, {'name': 'allow_all', 'login': 'true', 'challenge': 'true', 'kind': 'AllowAllPasswordIdentityProvider'}]
 
 # default subdomain to use for exposed routes
 openshift_master_default_subdomain={{ app_subdomain }}

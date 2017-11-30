@@ -13,8 +13,10 @@
   register: result
 
 - name: Wait for the VMs to get an IP
-  shell: 'virsh net-dhcp-leases {{ libvirt_network }} | grep {{ result.matches[0].mac.address }} | awk ''{gsub(/\/.*/, "", $5); print $5}'''
-  become: yes
+  shell: >-
+    virsh net-dhcp-leases {{ libvirt_network }} |
+    grep {{ result.matches[0].mac.address }} |
+    awk '{gsub(/\/.*/, "", $5); print $5}'
   register: ip
   until: ip.stdout != ""
   retries: 60

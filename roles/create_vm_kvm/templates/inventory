@@ -27,4 +27,4 @@ rh_subscription_pool={{ rh_subscription_pool }}
 # password. If using ssh key based auth, then the key should be managed by an
 # ssh agent.
 ansible_ssh_user={{ ansible_user }}
-app_subdomain={{ cluster_name }}.{{ domain }}
+app_subdomain={{ app_subdomain }}
